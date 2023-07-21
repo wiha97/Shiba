@@ -10,23 +10,43 @@
         <AssemblyVersion>1.0.1.0</AssemblyVersion>
         <FileVersion>1.0.1.0</FileVersion>
     </PropertyGroup>
+    
+    <!--vvv===Workaround for CMD showing on Windows===vvv-->    
+    <PropertyGroup>
+        <NSubsysTasksPath Condition="'$(NSubsysTasksPath)' == ''">$(HOME)/.nuget/packages/nsubsys/1.0.0/tool/NSubsys.Tasks.dll</NSubsysTasksPath>
+    </PropertyGroup>
 
+    <UsingTask TaskName="NSubsys.Tasks.NSubsys" AssemblyFile="$(NSubsysTasksPath)" />
+
+    <Target Name="CustomAfterBuild" AfterTargets="Build" Condition="$(RuntimeIdentifier.StartsWith('win'))">
+        <NSubsys TargetFile="$(OutputPath)$(AssemblyName)$(_NativeExecutableExtension)" />
+    </Target>
+
+    <Target Name="CustomAfterPublish" AfterTargets="Publish" Condition="$(RuntimeIdentifier.StartsWith('win'))">
+        <NSubsys TargetFile="$(PublishDir)$(AssemblyName)$(_NativeExecutableExtension)" />
+    </Target>
+    
     <ItemGroup>
         <TrimmerRootAssembly Include="Avalonia.Themes.Fluent" />
     </ItemGroup>
+    <!--^^^===Workaround for CMD showing on Windows===^^^-->
 
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="0.10.18" />
         <PackageReference Include="Avalonia.Desktop" Version="0.10.18" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.18" />
+        <PackageReference Include="NSubsys" Version="1.0.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="XamlNameReferenceGenerator" Version="1.6.1" />
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="Views\MainWindow.axaml.cs">
-        <DependentUpon>MainWindow.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
+        <Compile Update="Views\MainWindow.axaml.cs">
+            <DependentUpon>MainWindow.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
     </ItemGroup>
 </Project>
