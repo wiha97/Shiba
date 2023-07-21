@@ -54,6 +54,10 @@ public class Probe
 
             Conf.Win.FullString.Text = conf.FullString;
         }
+        catch (FileNotFoundException e)
+        {
+            Error.Warning(e.Message);
+        }
         catch (Exception e)
         {
             Error.Warning(e.Message);

@@ -8,17 +8,8 @@
         MinWidth="300" MinHeight="200"
         Title="ConfWin"
         Margin="5,5,5,0"
-        TransparencyLevelHint="AcrylicBlur">
+        Background="#272727">
     <Grid>
-        <ExperimentalAcrylicBorder IsHitTestVisible="False">
-            <ExperimentalAcrylicBorder.Material>
-                <ExperimentalAcrylicMaterial
-                    BackgroundSource="None"
-                    TintColor="Black"
-                    TintOpacity="0.5"
-                    MaterialOpacity="0.9" />
-            </ExperimentalAcrylicBorder.Material>
-        </ExperimentalAcrylicBorder>
         <ScrollViewer Padding="3">
             <Grid Margin="10,10,10,0">
                 <StackPanel>

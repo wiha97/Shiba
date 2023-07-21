@@ -53,7 +53,6 @@ public class Conf
             Profile = JsonSerializer.Deserialize<ConfModel>(json);
             SourceDir = Profile.Path;
             SourceFile = Profile.File;
-            Error.Log(json);
             Probe.Start();
         }
         catch (Exception e)
