@@ -1,0 +1,35 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="450"
+        Width="800" Height="400"
+        MinWidth="300" MinHeight="200"
+        Background="Transparent"
+        x:Class="Shiba.MainWindow"
+        Title="Shiba"
+        Margin="5"
+        TransparencyLevelHint="AcrylicBlur">
+    <Grid>
+        <ExperimentalAcrylicBorder IsHitTestVisible="False">
+            <ExperimentalAcrylicBorder.Material>
+                <ExperimentalAcrylicMaterial
+                    BackgroundSource="None"
+                    TintColor="Black"
+                    TintOpacity="0.5"
+                    MaterialOpacity="0.9" />
+            </ExperimentalAcrylicBorder.Material>
+        </ExperimentalAcrylicBorder>
+        <StackPanel x:Name="MainPanel" Margin="5">
+            <Grid>
+                <Label x:Name="HeadLabel" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="100,0,100,0" Foreground="Red"/>
+                <Button x:Name="ProfileBtn" HorizontalAlignment="Left" Content="New Profile" Click="Button_OnClick" />
+                <Button x:Name="RefreshBtn" HorizontalAlignment="Right" Content="Refresh" Click="RefreshBtn_OnClick" />
+            </Grid>
+            <StackPanel x:Name="Stacky" />
+            <TextBox x:Name="FullString" HorizontalAlignment="Stretch" Background="Transparent" BorderThickness="0" />
+        </StackPanel>
+        <Button Name="DoneBtn" Content="Done" VerticalAlignment="Bottom" HorizontalAlignment="Right"
+                Click="DoneBtn_OnClick" />
+    </Grid>
+</Window>

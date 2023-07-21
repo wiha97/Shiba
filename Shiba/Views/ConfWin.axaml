@@ -1,0 +1,98 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="350"
+        x:Class="Shiba.Views.ConfWin"
+        Width="400" Height="350"
+        MinWidth="300" MinHeight="200"
+        Title="ConfWin"
+        Margin="5,5,5,0"
+        TransparencyLevelHint="AcrylicBlur">
+    <Grid>
+        <ExperimentalAcrylicBorder IsHitTestVisible="False">
+            <ExperimentalAcrylicBorder.Material>
+                <ExperimentalAcrylicMaterial
+                    BackgroundSource="None"
+                    TintColor="Black"
+                    TintOpacity="0.5"
+                    MaterialOpacity="0.9" />
+            </ExperimentalAcrylicBorder.Material>
+        </ExperimentalAcrylicBorder>
+        <Grid Margin="10,10,10,0">
+            <StackPanel>
+                <Grid>
+                    <Label Name="PathLabel" Content="Path: " Foreground="Azure" HorizontalAlignment="Left"
+                           VerticalAlignment="Center" />
+                    <TextBox Name="PathBox" Foreground="Azure" HorizontalAlignment="Stretch"
+                             HorizontalContentAlignment="Right" BorderThickness="1"
+                             BorderBrush="#272727" Margin="100,0,0,0" />
+                </Grid>
+                <Grid>
+                    <Label Content="File: " Foreground="Azure" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                    <TextBox x:Name="FileBox" Foreground="Azure" HorizontalAlignment="Stretch"
+                             HorizontalContentAlignment="Right" BorderThickness="1"
+                             BorderBrush="#272727" Margin="100,0,0,0" />
+                </Grid>
+                <Grid>
+                    <Label Content="String start: " Foreground="Azure" HorizontalAlignment="Left"
+                           VerticalAlignment="Center" />
+                    <TextBox x:Name="FullStringBox" Foreground="Azure" HorizontalAlignment="Stretch"
+                             HorizontalContentAlignment="Right" BorderThickness="1"
+                             BorderBrush="#272727" Margin="100,0,0,0" />
+                </Grid>
+                <Grid>
+                    <Label Content="Separator: " Foreground="Azure" HorizontalAlignment="Left"
+                           VerticalAlignment="Center" />
+                    <TextBox x:Name="SepBox" Foreground="Azure" HorizontalAlignment="Right"
+                             HorizontalContentAlignment="Right" BorderThickness="1"
+                             BorderBrush="#272727" />
+                </Grid>
+                <Border Margin="20,5,20,5" BorderBrush="DarkSlateGray" BorderThickness="1,0,1,1">
+                    <StackPanel Margin="5">
+                        <Label Foreground="Azure" Content="Keywords" />
+                        <Grid>
+                            <TextBox x:Name="KeyBox" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                                     VerticalAlignment="Top" />
+                        </Grid>
+                        <Grid>
+                            <Expander Header="Ignore" HorizontalAlignment="Left" Background="Transparent" Padding="2"
+                                      Margin="5">
+                                <StackPanel>
+                                    <Grid>
+                                        <TextBox x:Name="DelBox" HorizontalContentAlignment="Left"
+                                                 HorizontalAlignment="Left" Margin="0,0,26,0" />
+                                        <Button x:Name="AddDelBtn" Content="+" HorizontalAlignment="Right"
+                                                Click="AddDelBtn_OnClick" />
+                                    </Grid>
+                                    <StackPanel x:Name="DelStack" />
+                                </StackPanel>
+                            </Expander>
+                            <!-- <StackPanel x:Name="DelStack" HorizontalAlignment="Left"> -->
+                            <!--     <CheckBox x:Name="DelBox" Click="DelBox_OnClick" Content="Remove spaces" /> -->
+                            <!-- </StackPanel> -->
+                            <!-- <StackPanel x:Name="SpaceStack" HorizontalAlignment="Right"> -->
+                            <CheckBox x:Name="SpaceBox" Content="No spaces" IsChecked="False"
+                                      HorizontalAlignment="Right" />
+                            <!-- </StackPanel> -->
+                        </Grid>
+                        <Grid>
+                            <Label Content="Title:" VerticalAlignment="Center" />
+                            <TextBox x:Name="KeyTitleBox" HorizontalAlignment="Stretch" Margin="50,0,45,0" />
+                            <Button Name="AddKeyBtn" Content="Add" HorizontalAlignment="Right"
+                                    VerticalAlignment="Stretch" Click="AddKeyBtn_OnClick" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+                <StackPanel x:Name="KeyStack" Margin="20,0,20,0" />
+            </StackPanel>
+            <Panel Background="#292929" Height="33" VerticalAlignment="Bottom">
+            <Button Content="Conf.json" IsEnabled="False" x:Name="JsonBtn" VerticalAlignment="Bottom"
+                    HorizontalAlignment="Left"
+                    Click="JsonBtn_OnClick" />
+            <Button Content="Save" Name="SaveBtn" VerticalAlignment="Bottom" HorizontalAlignment="Right"
+                    Click="SaveBtn_OnClick" />
+            </Panel>
+        </Grid>
+    </Grid>
+</Window>
