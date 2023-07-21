@@ -41,7 +41,6 @@ public class Probe
                         keyword.Value = RuleCheck(keyword);
                         grids.Add(Row(keyword, i));
                         conf.FullString += $",{keyword.Value}";
-                        Console.WriteLine(conf.FullString);
                         i++;
                         break;
                     }
@@ -54,11 +53,10 @@ public class Probe
             }
 
             Conf.Win.FullString.Text = conf.FullString;
-            Console.WriteLine(conf.FullString);
         }
         catch (Exception e)
         {
-            Conf.Win.HeadLabel.Content = e.Message;
+            Error.Warning(e.Message);
             Error.Log(e.ToString());
         }
     }
@@ -92,7 +90,7 @@ public class Probe
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.Message);
+            Error.Warning(e.Message);
         }
 
         return grid;
@@ -101,15 +99,14 @@ public class Probe
     static string RuleCheck(KeywordModel keyword)
     {
         string value = keyword.Value;
-
-        if (keyword.NoSpace == true)
-        {
-            value = NoSpace(value);
-        }
-
+        
         if (keyword.Remove.Length > 0)
         {
             value = RemoveWord(value, keyword.Remove);
+        }
+        if (keyword.NoSpace == true)
+        {
+            value = NoSpace(value);
         }
 
         return value;
@@ -124,7 +121,7 @@ public class Probe
     {
         foreach (string word in words)
         {
-            value.Replace(word, "");
+            value = value.Replace(word, "");
         }
 
         return value;
