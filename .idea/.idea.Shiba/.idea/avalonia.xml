@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="Shiba/App.axaml" value="Shiba/Shiba.csproj" />
+        <entry key="Shiba/MainWindow.axaml" value="Shiba/Shiba.csproj" />
+        <entry key="Shiba/Views/AddView.axaml" value="Shiba/Shiba.csproj" />
+        <entry key="Shiba/Views/ConfView.axaml" value="Shiba/Shiba.csproj" />
+        <entry key="Shiba/Views/ConfWin.axaml" value="Shiba/Shiba.csproj" />
+        <entry key="Shiba/Views/MainWindow.axaml" value="Shiba/Shiba.csproj" />
+        <entry key="Shiba/Views/ManageProfileView.axaml" value="Shiba/Shiba.csproj" />
+      </map>
+    </option>
+  </component>
+</project>
