@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -16,6 +18,7 @@ namespace Shiba.Views;
 
 public partial class ConfWin : Window
 {
+    private TextBox profBox;
     private TextBox pathBox;
     private TextBox fileBox;
     private TextBox stringBox;
@@ -31,10 +34,12 @@ public partial class ConfWin : Window
 
     private List<string> delWord = new();
     private List<KeywordModel> keywords = new();
+
     public ConfWin()
     {
         conf = Conf.Profile;
         InitializeComponent();
+        profBox = this.Find<TextBox>("ProfBox");
         pathBox = this.Find<TextBox>("PathBox");
         fileBox = this.Find<TextBox>("FileBox");
         stringBox = this.Find<TextBox>("FullStringBox");
@@ -63,6 +68,7 @@ public partial class ConfWin : Window
     void FillConf()
     {
         this.Find<Button>("JsonBtn").IsEnabled = true;
+        profBox.Text = conf.ProfileName;
         pathBox.Text = conf.Path;
         fileBox.Text = conf.File;
         stringBox.Text = conf.FullString;
@@ -76,13 +82,14 @@ public partial class ConfWin : Window
         {
             conf = new ConfModel()
             {
+                ProfileName = profBox.Text,
                 Path = pathBox.Text,
                 File = fileBox.Text,
                 FullString = stringBox.Text,
                 Separator = sepBox.Text[0],
                 Keywords = keywords
             };
-            if (conf.Path != null)
+            if (conf.Path != null && !conf.Path.EndsWith("/"))
                 conf.Path += "/";
             Conf.SaveFile(conf);
             Conf.Win.ProfileBtn.Content = "Modify Profile";
@@ -122,7 +129,7 @@ public partial class ConfWin : Window
     {
         keyStack.Children.Clear();
         int i = 0;
-        IBrush[] colors = new[] {Brush.Parse("#252525"), Brush.Parse("Transparent")};
+        IBrush[] colors = {Brush.Parse("#252525"), Brush.Parse("Transparent")};
         foreach (var word in keywords)
         {
             if (i > 1)
@@ -169,22 +176,69 @@ public partial class ConfWin : Window
         }
     }
 
+    private string Json(string json)
+    {
+        if (json.EndsWith(".json"))
+        {
+            json = File.ReadAllText(json);
+        }
+
+        return json;
+    }
+
+    private void ImportProfile(string json)
+    {
+        try
+        {
+            conf = JsonSerializer.Deserialize<ConfModel>(json);
+            FillConf();
+        }
+        catch (Exception e)
+        {
+            Error.Warning(e.Message);
+            Error.Log(e.ToString());
+        }
+    }
+
+    private void ImportKeywords(string json)
+    {
+        try
+        {
+            List<KeywordModel> imported = JsonSerializer.Deserialize<List<KeywordModel>>(json);
+            foreach (KeywordModel key in imported)
+            {
+                keywords.Add(key);
+            }
+        }
+        catch (Exception e)
+        {
+            Error.Warning(e.Message);
+            Error.Log(e.ToString());
+        }
+    }
+
     private void AddKeyBtn_OnClick(object? sender, RoutedEventArgs e)
     {
         delStack.Children.Clear();
-        if (keyTitleBox.Text == null)
-            keyTitleBox.Text = keyBox.Text;
-        keywords.Add(new()
+        if (keyBox.Text.Contains("{") || keyBox.Text.EndsWith(".json"))
         {
-            Name = keyBox.Text,
-            Title = keyTitleBox.Text,
-            Remove = delWord.ToArray(),
-            NoSpace = spaceBox.IsChecked
-        });
-        keyTitleBox.Clear();
-        spaceBox.IsChecked = false;
+            ImportKeywords(Json(keyBox.Text));
+        }
+        else
+        {
+            keywords.Add(new()
+            {
+                Name = keyBox.Text,
+                Title = keyTitleBox.Text,
+                Remove = delWord.ToArray(),
+                NoSpace = spaceBox.IsChecked
+            });
+            keyTitleBox.Clear();
+            spaceBox.IsChecked = false;
+            delWord.Clear();
+        }
+
         FillKeywords();
-        delWord.Clear();
     }
 
     private void JsonBtn_OnClick(object? sender, RoutedEventArgs e)
@@ -198,5 +252,17 @@ public partial class ConfWin : Window
             Error.Warning(x.Message);
             Error.Log(x.ToString());
         }
+    }
+
+    private void ProfBtn_OnClick(object? sender, RoutedEventArgs e)
+    {
+        ImportProfile(Json(profBox.Text));
+    }
+
+    private void ProfBox_OnGotFocus(object? sender, GotFocusEventArgs e)
+    {
+        if(profBox.Text != null) 
+            if(profBox.Text.Contains("{")||profBox.Text.EndsWith(".json")) 
+                this.Find<Button>("ProfBtn").IsEnabled = true;
     }
 }

@@ -2,9 +2,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="350"
+        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="450"
         x:Class="Shiba.Views.ConfWin"
-        Width="400" Height="350"
+        Width="400" Height="450"
         MinWidth="300" MinHeight="200"
         Title="ConfWin"
         Margin="5,5,5,0"
@@ -14,13 +14,37 @@
             <Grid Margin="10,10,10,0">
                 <StackPanel>
                     <Grid>
+                        <ToolTip.Tip>
+                            <StackPanel>
+                                <TextBlock
+                                    Text="You can import profiles by pasting in the raw JSON or the path to an existing file"
+                                    TextWrapping="WrapWithOverflow" />
+                            </StackPanel>
+                        </ToolTip.Tip>
+                        <Label Content="Profile: " Foreground="Azure" HorizontalAlignment="Left"
+                               VerticalAlignment="Center">
+                        </Label>
+                        <TextBox Name="ProfBox" Foreground="Azure" MaxHeight="15" HorizontalAlignment="Stretch"
+                                 HorizontalContentAlignment="Right" BorderThickness="1" GotFocus="ProfBox_OnGotFocus"
+                                 BorderBrush="#272727" Margin="100,0,60,0" />
+                        <Button x:Name="ProfBtn" Content="Import" HorizontalAlignment="Right" IsEnabled="False"
+                                Click="ProfBtn_OnClick" />
+                    </Grid>
+                    <Grid>
+                        <ToolTip.Tip>
+                            <TextBlock Text="Path to the target directory" TextWrapping="WrapWithOverflow" />
+                        </ToolTip.Tip>
                         <Label Name="PathLabel" Content="Path: " Foreground="Azure" HorizontalAlignment="Left"
-                               VerticalAlignment="Center" />
+                               VerticalAlignment="Center">
+                        </Label>
                         <TextBox Name="PathBox" Foreground="Azure" HorizontalAlignment="Stretch"
                                  HorizontalContentAlignment="Right" BorderThickness="1"
                                  BorderBrush="#272727" Margin="100,0,0,0" />
                     </Grid>
                     <Grid>
+                        <ToolTip.Tip>
+                            <TextBlock Text="Name of the target file" TextWrapping="WrapWithOverflow" />
+                        </ToolTip.Tip>
                         <Label Content="File: " Foreground="Azure" HorizontalAlignment="Left"
                                VerticalAlignment="Center" />
                         <TextBox x:Name="FileBox" Foreground="Azure" HorizontalAlignment="Stretch"
@@ -28,6 +52,12 @@
                                  BorderBrush="#272727" Margin="100,0,0,0" />
                     </Grid>
                     <Grid>
+                        <ToolTip.Tip>
+                            <StackPanel>
+                                <TextBlock Text="Prefix to the raw string of items, separated by comma"
+                                           TextWrapping="WrapWithOverflow" />
+                            </StackPanel>
+                        </ToolTip.Tip>
                         <Label Content="String start: " Foreground="Azure" HorizontalAlignment="Left"
                                VerticalAlignment="Center" />
                         <TextBox x:Name="FullStringBox" Foreground="Azure" HorizontalAlignment="Stretch"
@@ -35,6 +65,9 @@
                                  BorderBrush="#272727" Margin="100,0,0,0" />
                     </Grid>
                     <Grid>
+                        <ToolTip.Tip>
+                            <TextBlock Text="Char that separates keyword with value" TextWrapping="WrapWithOverflow" />
+                        </ToolTip.Tip>
                         <Label Content="Separator: " Foreground="Azure" HorizontalAlignment="Left"
                                VerticalAlignment="Center" />
                         <TextBox x:Name="SepBox" Foreground="Azure" HorizontalAlignment="Right"
@@ -43,9 +76,15 @@
                     </Grid>
                     <Border Margin="20,5,20,5" BorderBrush="DarkSlateGray" BorderThickness="1,0,1,1">
                         <StackPanel Margin="5">
-                            <Label Foreground="Azure" Content="Keywords" />
+                            <Label Foreground="Azure" HorizontalAlignment="Center" Content="Keywords" />
                             <Grid>
-                                <TextBox x:Name="KeyBox" HorizontalAlignment="Stretch"
+                                <ToolTip.Tip>
+                                    <TextBlock Text="You can import keywords by pasting in the raw json or the path to an existing file and click 'add'"
+                                               TextWrapping="WrapWithOverflow" />
+                                </ToolTip.Tip>
+                                <Label Content="Keyword" VerticalAlignment="Center" />
+                                <TextBox x:Name="KeyBox" MaxHeight="50" HorizontalAlignment="Stretch"
+                                         Margin="70,0,0,0"
                                          HorizontalContentAlignment="Left"
                                          VerticalAlignment="Top" />
                             </Grid>
@@ -62,11 +101,23 @@
                                         </Grid>
                                         <StackPanel x:Name="DelStack" />
                                     </StackPanel>
+                                    <ToolTip.Tip>
+                                        <StackPanel>
+                                            <TextBlock Text="List of words to be removed from the value"
+                                                       TextWrapping="WrapWithOverflow" />
+                                        </StackPanel>
+                                    </ToolTip.Tip>
                                 </Expander>
                                 <CheckBox x:Name="SpaceBox" Content="No spaces" IsChecked="False"
                                           HorizontalAlignment="Right" />
                             </Grid>
                             <Grid>
+                                <ToolTip.Tip>
+                                    <StackPanel>
+                                        <TextBlock Text="Custom title only visible in Shiba, more human readable"
+                                                   TextWrapping="WrapWithOverflow" />
+                                    </StackPanel>
+                                </ToolTip.Tip>
                                 <Label Content="Title:" VerticalAlignment="Center" />
                                 <TextBox x:Name="KeyTitleBox" HorizontalAlignment="Stretch" Margin="50,0,45,0" />
                                 <Button Name="AddKeyBtn" Content="Add" HorizontalAlignment="Right"
