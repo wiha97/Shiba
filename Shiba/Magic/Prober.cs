@@ -104,7 +104,7 @@ public class Probe
     {
         string value = keyword.Value;
         
-        if (keyword.Remove.Length > 0)
+        if (keyword.Remove.Count > 0)
         {
             value = RemoveWord(value, keyword.Remove);
         }
@@ -121,7 +121,7 @@ public class Probe
         return value.Replace(" ", "");
     }
 
-    static string RemoveWord(string value, string[] words)
+    static string RemoveWord(string value, List<string> words)
     {
         foreach (string word in words)
         {

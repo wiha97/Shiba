@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text.Json;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
@@ -103,12 +104,6 @@ public partial class ConfWin : Window
         }
     }
 
-    private void SaveBtn_OnClick(object? sender, RoutedEventArgs e)
-    {
-        CreateConf();
-        Close();
-    }
-
     private void AddDelBtn_OnClick(object? sender, RoutedEventArgs e)
     {
         delWord.Add(delBox.Text);
@@ -125,55 +120,237 @@ public partial class ConfWin : Window
         }
     }
 
+    IBrush[] colors = {Brush.Parse("#252525"), Brush.Parse("Transparent")};
+
     void FillKeywords()
     {
         keyStack.Children.Clear();
+        int idx = 0;
         int i = 0;
-        IBrush[] colors = {Brush.Parse("#252525"), Brush.Parse("Transparent")};
         foreach (var word in keywords)
         {
             if (i > 1)
                 i = 0;
-            Grid grid = new();
-            Label key = new()
+            UniformGrid uGrid = new()
             {
-                Foreground = Brushes.Azure,
-                Content = word.Name,
+                Columns = 5,
+                Rows = 1
+            };
+            TextBox key = new()
+            {
+                Text = word.Name,
                 VerticalAlignment = VerticalAlignment.Center,
-                HorizontalAlignment = HorizontalAlignment.Left,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                HorizontalContentAlignment = HorizontalAlignment.Left,
+                Background = Brushes.Transparent,
+                BorderBrush = Brushes.Transparent,
                 Margin = new Thickness(10, 0, 10, 0)
             };
-            ListBox list = new()
+            key.LostFocus += (sender, args) => word.Name = key.Text;
+            TextBox title = new()
             {
-                Items = word.Remove,
-                Foreground = Brushes.Azure
-            };
-            Expander exp = new()
-            {
-                Header = word.Remove.Length,
-                Content = list,
-                Padding = new Thickness(0),
+                Text = word.Title,
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                HorizontalContentAlignment = HorizontalAlignment.Left,
                 Background = Brushes.Transparent,
-                HorizontalAlignment = HorizontalAlignment.Center
+                BorderBrush = Brushes.Transparent,
+                Margin = new Thickness(10, 0, 10, 0)
             };
-            RadioButton rad = new()
+            title.LostFocus += (sender, args) => word.Title = title.Text;
+            string space = "space";
+            if (word.NoSpace == true)
+                space = "no space";
+            Label spc = new()
             {
-                IsEnabled = false,
-                IsChecked = word.NoSpace,
-                HorizontalAlignment = HorizontalAlignment.Right
+                Content = space,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                HorizontalContentAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Center,
+                // Margin = new Thickness(0, 0, 50, 0)
+            };
+            Button btn = new()
+            {
+                Background = Brushes.Transparent,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                Content = "X",
+                BorderBrush = Brushes.DarkRed,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            btn.Click += (sender, args) =>
+            {
+                keywords.Remove(word);
+                FillKeywords();
             };
             DockPanel dock = new()
             {
                 Background = colors[i]
             };
-            grid.Children.Add(key);
-            grid.Children.Add(exp);
-            grid.Children.Add(rad);
-            dock.Children.Add(grid);
+
+            uGrid.Children.Add(key);
+            uGrid.Children.Add(title);
+            // grid.Children.Add(exp);
+
+            // if (word.Remove.Count > 0)
+                uGrid.Children.Add(Filter(word));
+            // else
+            //     uGrid.Children.Add(new Label(){Content = ""});
+
+            uGrid.Children.Add(spc);
+            uGrid.Children.Add(btn);
+            dock.Children.Add(uGrid);
 
             keyStack.Children.Add(dock);
             i++;
+            idx++;
         }
+    }
+
+    private string FilterBtnText(KeywordModel word)
+    {
+        string text = "Filter";
+        if (word.Remove.Count > 0)
+            text += $" ({word.Remove.Count})";
+        return text;
+    }
+    
+    private Button Filter(KeywordModel word)
+    {
+        StackPanel eStack = new();
+        Button btn = new()
+        {
+            Content = FilterBtnText(word),
+            Padding = new Thickness(0),
+            Background = Brush.Parse("#232323"),
+            HorizontalContentAlignment = HorizontalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Stretch
+        };
+
+        Grid aGrid = new();
+        TextBox box = new()
+        {
+            HorizontalAlignment = HorizontalAlignment.Left
+        };
+        Button aBtn = new()
+        {
+            Content = "+",
+            Padding = new Thickness(0),
+            Background = Brushes.Transparent,
+            HorizontalAlignment = HorizontalAlignment.Right,
+        };
+        aBtn.Click += (sender, args) =>
+        {
+            word.Remove.Add(box.Text);
+            FillKeywords();
+        };
+        aGrid.Children.Add(box);
+        aGrid.Children.Add(aBtn);
+        eStack.Children.Add(aGrid);
+        
+        int x = 0;
+        foreach (string rem in word.Remove)
+        {
+            if (x > 1)
+                x = 0;
+            Grid g = new Grid() {Background = colors[x]};
+            Label l = new()
+            {
+                Content = rem,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                Margin = new Thickness(0, 0, 20, 0)
+            };
+            Button b = new()
+            {
+            Padding = new Thickness(0),
+                Background = Brushes.Transparent,
+                Content = "X",
+                BorderBrush = Brushes.DarkRed,
+                Width = 15,
+                Height = 15,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                Margin = new Thickness(20, 0, 0, 0)
+            };
+            b.Click += (sender, args) =>
+            {
+                word.Remove.Remove(rem);
+                FillKeywords();
+            };
+            g.Children.Add(l);
+            g.Children.Add(b);
+            eStack.Children.Add(g);
+        }
+
+        btn.Flyout = FilterFlyout(word);
+
+        // btn.Content = eStack;
+        return btn;
+    }
+
+    private Flyout FilterFlyout(KeywordModel word)
+    {
+        Flyout flyout = new Flyout()
+        {
+            Placement = FlyoutPlacementMode.Bottom
+        };
+        StackPanel eStack = new(){MinWidth = 100};
+        Grid aGrid = new();
+        TextBox box = new()
+        {
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            Margin = new Thickness(0,0,25,0)
+        };
+        Button aBtn = new()
+        {
+            Content = "+",
+            Background = Brushes.Transparent,
+            HorizontalAlignment = HorizontalAlignment.Right,
+        };
+        aBtn.Click += (sender, args) =>
+        {
+            word.Remove.Add(box.Text);
+            FillKeywords();
+        };
+        aGrid.Children.Add(box);
+        aGrid.Children.Add(aBtn);
+        eStack.Children.Add(aGrid);
+        
+        int x = 0;
+        foreach (string rem in word.Remove)
+        {
+            if (x > 1)
+                x = 0;
+            DockPanel g = new(){Background = colors[x]};
+            Label l = new()
+            {
+                Content = rem,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                Margin = new Thickness(0, 0, 20, 0)
+            };
+            Button b = new()
+            {
+                Background = Brushes.Transparent,
+                Content = "X",
+                BorderBrush = Brushes.DarkRed,
+                Width = 15,
+                Height = 15,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                Margin = new Thickness(50, 0, 0, 0)
+            };
+            b.Click += (sender, args) =>
+            {
+                word.Remove.Remove(rem);
+                FillKeywords();
+            };
+            DockPanel.SetDock(b, Dock.Right);
+            g.Children.Add(b);
+            g.Children.Add(l);
+            eStack.Children.Add(g);
+            x++;
+        }
+        
+        flyout.Content = eStack;
+        
+        return flyout;
     }
 
     private string Json(string json)
@@ -230,7 +407,7 @@ public partial class ConfWin : Window
             {
                 Name = keyBox.Text,
                 Title = keyTitleBox.Text,
-                Remove = delWord.ToArray(),
+                Remove = delWord,
                 NoSpace = spaceBox.IsChecked
             });
             keyTitleBox.Clear();
@@ -261,8 +438,15 @@ public partial class ConfWin : Window
 
     private void ProfBox_OnGotFocus(object? sender, GotFocusEventArgs e)
     {
-        if(profBox.Text != null) 
-            if(profBox.Text.Contains("{")||profBox.Text.EndsWith(".json")) 
+        if (profBox.Text != null)
+            if (profBox.Text.Contains("{") || profBox.Text.EndsWith(".json"))
                 this.Find<Button>("ProfBtn").IsEnabled = true;
+    }
+
+    private void SaveBtn_OnClick(object? sender, RoutedEventArgs e)
+    {
+        Conf.Win.Stacky.Children.Clear();
+        CreateConf();
+        Close();
     }
 }
