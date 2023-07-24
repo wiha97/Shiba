@@ -95,7 +95,7 @@ public partial class ConfWin : Window
             Conf.SaveFile(conf);
             Conf.Win.ProfileBtn.Content = "Modify Profile";
             Conf.Modify = true;
-            Conf.LoadFile();
+            Conf.LoadFile($"{Conf.ConfPath}/{conf.ProfileName}.json");
         }
         catch (Exception e)
         {
@@ -422,7 +422,9 @@ public partial class ConfWin : Window
     {
         try
         {
-            Process.Start(Conf.ConfFile);
+            File.Delete($"{Conf.ConfPath}/{conf.ProfileName}.json");
+            Conf.ListProfiles();
+            Close();
         }
         catch (Exception x)
         {

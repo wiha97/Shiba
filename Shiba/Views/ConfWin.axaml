@@ -128,7 +128,7 @@
                     <StackPanel x:Name="KeyStack" Margin="20,0,20,0" />
                 </StackPanel>
                 <Panel Background="#292929" Height="33" VerticalAlignment="Bottom">
-                    <Button Content="Conf.json" IsEnabled="False" x:Name="JsonBtn" VerticalAlignment="Bottom"
+                    <Button Content="Delete" IsEnabled="False" x:Name="JsonBtn" Background="Transparent" BorderBrush="DarkRed" VerticalAlignment="Bottom"
                             HorizontalAlignment="Left"
                             Click="JsonBtn_OnClick" />
                     <Button Content="Save" Name="SaveBtn" VerticalAlignment="Bottom" HorizontalAlignment="Right"

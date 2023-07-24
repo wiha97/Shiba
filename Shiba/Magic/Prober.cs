@@ -24,7 +24,8 @@ public class Probe
     {
         try
         {
-            string json = File.ReadAllText(Conf.ConfFile);
+            Conf.Win.Stacky.Children.Clear();
+            string json = File.ReadAllText($"{Conf.ConfPath}/{Conf.Profile.ProfileName}.json");
             conf = JsonSerializer.Deserialize<ConfModel>(json);
             List<Grid> grids = new();
             string[] file = File.ReadAllLines($"{conf.Path}{conf.File}");
